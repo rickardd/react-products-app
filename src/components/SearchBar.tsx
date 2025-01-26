@@ -1,14 +1,13 @@
-import { useState } from "react";
 import { useStore } from "../store/useStore";
 import useDebounce from "../hooks/useDebouce";
 
 const SearchBar: React.FC = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const { filterProductsByName } = useStore();
+  const searchTerm = useStore((state) => state.searchTerm);
+  const setSearchTerm = useStore((state) => state.setSearchTerm);
   const { debounce } = useDebounce();
 
   const handleSearch = debounce(300, (term: string) => {
-    filterProductsByName(term);
+    setSearchTerm(term);
   });
 
   const onChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -18,8 +17,8 @@ const SearchBar: React.FC = () => {
   };
 
   return (
-    <div>
-      <input type="text" placeholder="Search products..." value={searchTerm} onChange={onChange} />
+    <div className="input-container">
+      <input className="styled-input" type="text" placeholder="Search products..." onChange={onChange} value={searchTerm} />
     </div>
   );
 };

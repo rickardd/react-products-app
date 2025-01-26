@@ -1,15 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useStore } from "../store/useStore";
 
 export const DarModeButton = () => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const isDarkMode = useStore((state) => state.isDarkMode);
+  const setDarkMode = useStore((state) => state.setDarkMode);
 
   const toggleTheme = () => {
-    setIsDarkMode((prevMode) => !prevMode);
+    setDarkMode(!isDarkMode);
   };
 
   useEffect(() => {
     document.body.className = isDarkMode ? "dark-mode" : "light-mode";
   }, [isDarkMode]);
 
-  return <button onClick={toggleTheme}>Switch to {isDarkMode ? "Light" : "Dark"} Mode</button>;
+  return <a onClick={toggleTheme}>Toggle {isDarkMode ? "Light" : "Dark"} Mode</a>;
 };

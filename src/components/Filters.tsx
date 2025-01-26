@@ -1,20 +1,25 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useStore } from "../store/useStore";
 
 export const Filter = () => {
-  const { products, filteredProducts, filterProductsByCategory } = useStore();
+  const products = useStore((state) => state.products);
+  const setCategories = useStore((state) => state.setCategories);
+  const selectedCategories = useStore((state) => state.selectedCategories);
 
-  // Perfornamce?
   const uniqueCategories = Array.from(new Set(products.map((item) => item.category)));
 
-  const [selectedOptions, setSelectedOptions] = useState([]);
+  const [selectedOptions, setSelectedOptions] = useState(selectedCategories);
 
-  const handleCheckboxChange = (event: any) => {
+  useEffect(() => {
+    setSelectedOptions(selectedCategories);
+  }, [selectedCategories]);
+
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
-    setSelectedOptions((prevSelected: any) => {
+    setSelectedOptions((prevSelected) => {
       if (prevSelected.includes(value)) {
         // If already selected, remove it
-        return prevSelected.filter((option: any) => option !== value);
+        return prevSelected.filter((option) => option !== value);
       } else {
         // If not selected, add it
         return [...prevSelected, value];
@@ -22,11 +27,8 @@ export const Filter = () => {
     });
   };
 
-  const onFiler = () => {
-    console.log("onFilter", selectedOptions);
-
-    filterProductsByCategory(selectedOptions);
-    // onFilter(selectedOptions);
+  const onFilter = () => {
+    setCategories(selectedOptions);
   };
 
   return (
@@ -40,7 +42,7 @@ export const Filter = () => {
           </label>
         </div>
       ))}
-      <button onClick={onFiler}>Apply Filter</button>
+      <a onClick={onFilter}>Apply Filter</a>
     </div>
   );
 };

@@ -1,24 +1,22 @@
-// src/components/ProductList.tsx
 import React, { useEffect } from "react";
 import { useStore } from "../store/useStore";
-import ProductCard from "./ProductCard";
-import { Filter } from "./Filters";
-import SearchBar from "./SearchBar";
+import ProductCard from "./ProductRow";
 
 const ProductList: React.FC = () => {
-  const { filteredProducts, loading, error, fetchProducts } = useStore();
+  const filteredProducts = useStore((state) => state.filteredProducts);
+  const loading = useStore((state) => state.loading);
+  const error = useStore((state) => state.error);
+  const fetchProducts = useStore((state) => state.fetchProducts);
 
   useEffect(() => {
     fetchProducts();
-  }, []);
+  }, [fetchProducts]);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
   return (
     <div>
-      <SearchBar />
-      <Filter />
       <div className="product-grid">
         <table>
           <thead>

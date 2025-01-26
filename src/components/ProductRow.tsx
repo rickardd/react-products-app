@@ -1,4 +1,4 @@
-interface ProductCardProps {
+interface ProductRowProps {
   product: {
     id: number;
     title: string;
@@ -8,7 +8,7 @@ interface ProductCardProps {
   };
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+const ProductRow: React.FC<ProductRowProps> = ({ product }) => {
   return (
     <tr key={product.id}>
       <td>{product.title}</td>
@@ -19,4 +19,4 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   );
 };
 
-export default ProductCard;
+export default ProductRow;

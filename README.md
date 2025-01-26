@@ -1,50 +1,38 @@
-# React + TypeScript + Vite
+# Run Commands
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+- Use `npm run dev` to start the React server.
+- Use `npm run test` to run the tests.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Considering the short deadline, I used React as it was the most fresh in my mind. I utilized:
 
-## Expanding the ESLint configuration
+- Zustand
+- Vitest
+- TypeScript
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+The Zustand store holds state properties, including setting, getting, and manipulating state. This approach simplifies all components, as they primarily render the store state. I didn't use `useMemo` or `useCallback` because there were no unnecessary re-renders.
 
-- Configure the top-level `parserOptions` property like this:
+## Regarding unnecessary re-renders,
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+If I use the store like this:
+
+```javascript
+const { products, setCategories, selectedCategories } = useStore();
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+the component will re-render each time the store updates, even if we don't use those properties in this component.
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+However, if we subscribe to each store property like this, the component will only render when any of these properties change.
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+```typescript
+const products = useStore((state) => state.products);
+const setCategories = useStore((state) => state.setCategories);
+const selectedCategories = useStore((state) => state.selectedCategories);
 ```
+
+This reduces the need of useMemo and useCallback
+
+## Other
+
+Unfortunately, I didn't have time to complete the entire test. What remains is the implementation of infinite scrolling.
